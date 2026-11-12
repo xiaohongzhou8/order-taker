@@ -1,0 +1,39 @@
+<header class="main-header">
+    <div class="header-inner">
+        <a href="{{ route('dashboard') }}" class="logo">
+            <span class="logo-mark"><i class="fa-solid fa-basket-shopping" aria-hidden="true"></i></span>
+            <span class="logo-label">OrderTaker</span>
+        </a>
+
+        <div class="nav-container">
+            @auth
+                <nav class="header-nav">
+                    <button type="button" class="header-action-button" data-dashboard-action="print" aria-label="Print workspace">
+                        <i class="fa-solid fa-print" aria-hidden="true"></i>
+                        Print
+                    </button>
+                    <a href="{{ route('orders.create') }}" class="new-order-button" data-dashboard-action="new-order">
+                        New order
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="header-signout">
+                            <span>Sign out</span>
+                            <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </nav>
+            @else
+                <nav class="header-nav">
+                    <a href="{{ route('login') }}" class="btn-login">Sign In</a>
+                    <a href="{{ route('register') }}" class="nav-link">Register</a>
+                </nav>
+            @endauth
+        </div>
+
+        <button class="sidebar-open-toggle" type="button" data-sidebar-toggle aria-expanded="true" aria-controls="sidebar" aria-label="Open orders sidebar">
+            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
+    </div>
+</header>
