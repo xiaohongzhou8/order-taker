@@ -30,7 +30,7 @@
                             <div class="relative">
                                 <i class="fa-regular fa-envelope pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true"></i>
                                 <input type="email" id="email" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="you@example.com"
-                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-900/40">
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 !text-slate-900 caret-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:!text-white dark:caret-white dark:focus:border-blue-400 dark:focus:bg-slate-800 dark:focus:ring-blue-900/40">
                             </div>
                             @error('email') <span class="mt-1 block text-xs font-medium text-red-500">{{ $message }}</span> @enderror
                         </div>
@@ -39,7 +39,7 @@
                             <div class="relative">
                                 <i class="fa-solid fa-lock pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true"></i>
                                 <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••"
-                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-900/40">
+                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 !text-slate-900 caret-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:!text-white dark:caret-white dark:focus:border-blue-400 dark:focus:bg-slate-800 dark:focus:ring-blue-900/40">
                             </div>
                             @error('password') <span class="mt-1 block text-xs font-medium text-red-500">{{ $message }}</span> @enderror
                         </div>

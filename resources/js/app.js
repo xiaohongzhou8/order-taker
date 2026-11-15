@@ -88,6 +88,12 @@ document.addEventListener('click', async (event) => {
             const orderItem = deleteButton.closest('.order-item');
             orderItem.remove();
 
+            if (selectedOrder?.id === Number(deleteButton.dataset.orderDelete)) {
+                selectedOrder = null;
+                document.querySelector('#workspacePanel').innerHTML = '<p class="no-order-detail">No order selected. Click on an order from the sidebar to view its details.</p>';
+                window.history.pushState({}, '', '/dashboard');
+            }
+
             if (!document.querySelector('.order-item')) {
                 document.querySelector('#orderList').innerHTML = '<p class="no-orders">No orders yet.</p>';
             }
@@ -130,7 +136,22 @@ document.addEventListener('click', async (event) => {
             return;
         }
 
-        printAsciiReceipt(selectedOrder);
+        try {
+            const response = await fetch(`/orders/${selectedOrder.id}/print`, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+            });
+
+            if (!response.ok) {
+                window.alert('Unable to send the receipt to the printer.');
+            }
+        } catch {
+            window.alert('Unable to send the receipt to the printer.');
+        }
         return;
     }
 
@@ -179,7 +200,12 @@ document.addEventListener('click', async (event) => {
         orderItem.className = 'order-item active';
         orderItem.dataset.orderId = order.id;
         orderItem.innerHTML = `
-            <div class="order-number">${escapeHtml(order.order_number)}</div>
+            <div class="order-item-heading">
+                <div class="order-number">${escapeHtml(order.order_number)}</div>
+                <button type="button" class="order-delete" data-order-delete="${escapeHtml(String(order.id))}" aria-label="Delete order ${escapeHtml(order.order_number)}">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+            </div>
             <h4 class="order-name">${escapeHtml(order.customer_name)}</h4>
             <div class="order-price">€${Number(order.price).toFixed(2)}</div>
         `;
@@ -267,9 +293,7 @@ function renderOrderDetails(order, isNewOrder = false) {
     selectedOrder = order;
     const workspacePanel = document.querySelector('#workspacePanel');
     workspacePanel.dataset.orderId = String(order.id);
-    const sortedItems = [...(order.items || [])].sort((first, second) => (
-        Number(first.item_number) - Number(second.item_number)
-    ));
+    const itemsInOrder = order.items || [];
     const name = isNewOrder ? order.order_number : order.customer_name;
     const itemEntry = `
         <section class="order-detail-section">
@@ -281,8 +305,8 @@ function renderOrderDetails(order, isNewOrder = false) {
     const notes = Array.isArray(order.notes) && order.notes.length
         ? `<section class="order-detail-section"><h2 class="detail-label">Notes</h2><div class="detail-content"><ul>${order.notes.map((note) => `<li>${escapeHtml(note)}</li>`).join('')}</ul></div></section>`
         : '';
-    const items = sortedItems.length
-        ? `<section class="order-detail-section"><h2 class="detail-label">Items</h2><div class="detail-content order-items"><div class="order-item-detail order-item-detail-heading"><span>Amount</span><span>Nr</span><span>Name</span><span>Price</span><span></span></div>${sortedItems.map((item) => `<div class="order-item-detail" data-order-item-id="${item.id}" data-quantity="${item.quantity}"><div class="item-quantity-cell item-quantity-controls"><button type="button" data-item-action="increase" aria-label="Increase ${escapeHtml(item.name)} quantity"><i class="fa-solid fa-plus" aria-hidden="true"></i></button><span>${escapeHtml(item.quantity)}</span><button type="button" data-item-action="decrease" aria-label="Decrease ${escapeHtml(item.name)} quantity"><i class="fa-solid fa-minus" aria-hidden="true"></i></button></div><span class="item-number-cell">${escapeHtml(item.item_number)}</span><span class="item-name-cell">${escapeHtml(item.name)}</span><strong class="item-price-cell">€${Number(item.price).toFixed(2)}</strong><button type="button" class="item-delete-button" data-item-action="delete" aria-label="Delete ${escapeHtml(item.name)}"><i class="fa-solid fa-trash" aria-hidden="true"></i></button></div>`).join('')}</div></section>`
+    const items = itemsInOrder.length
+        ? `<section class="order-detail-section"><h2 class="detail-label">Items</h2><div class="detail-content order-items"><div class="order-item-detail order-item-detail-heading"><span>Amount</span><span>Nr</span><span>Name</span><span>Price</span><span></span></div>${itemsInOrder.map((item) => `<div class="order-item-detail" data-order-item-id="${item.id}" data-quantity="${item.quantity}"><div class="item-quantity-cell item-quantity-controls"><button type="button" data-item-action="increase" aria-label="Increase ${escapeHtml(item.name)} quantity"><i class="fa-solid fa-plus" aria-hidden="true"></i></button><span>${escapeHtml(item.quantity)}</span><button type="button" data-item-action="decrease" aria-label="Decrease ${escapeHtml(item.name)} quantity"><i class="fa-solid fa-minus" aria-hidden="true"></i></button></div><span class="item-number-cell">${escapeHtml(item.item_number)}</span><span class="item-name-cell">${escapeHtml(item.name)}</span><strong class="item-price-cell">€${Number(item.price).toFixed(2)}</strong><button type="button" class="item-delete-button" data-item-action="delete" aria-label="Delete ${escapeHtml(item.name)}"><i class="fa-solid fa-trash" aria-hidden="true"></i></button></div>`).join('')}</div></section>`
         : '';
 
     workspacePanel.innerHTML = `
@@ -311,76 +335,12 @@ function renderOrderDetails(order, isNewOrder = false) {
                     </button>
                     <h2 id="item-number-modal-title">Add item</h2>
                     <p>Enter a food item number and press Enter.</p>
-                    <input class="order-edit-input" data-item-number-entry inputmode="numeric" autocomplete="off" autofocus>
+                    <input class="order-edit-input" data-item-number-entry maxlength="255" autocomplete="off" autofocus placeholder="e.g. 12 or A12">
                     <p class="form-error" data-item-entry-feedback role="alert"></p>
                     <button type="button" class="workspace-close" data-close-item-modal>Cancel</button>
                 </div>
             </div>
         </form>`;
-}
-
-function printAsciiReceipt(order) {
-    const width = 42;
-    const line = '='.repeat(width);
-    const divider = '-'.repeat(width);
-    const fit = (value, length) => String(value).slice(0, length).padEnd(length, ' ');
-    const money = (value) => `€${Number(value).toFixed(2)}`;
-    const sortedItems = [...(order.items || [])].sort((first, second) => (
-        Number(first.item_number) - Number(second.item_number)
-    ));
-    const itemLines = sortedItems.length
-        ? sortedItems.flatMap((item) => {
-            const itemNumber = String(item.item_number).padStart(3, ' ');
-            const name = fit(item.name, 22);
-            const quantity = String(item.quantity).padStart(3, ' ');
-            const price = money(Number(item.price) * Number(item.quantity)).padStart(10, ' ');
-
-            return [`${quantity}  ${itemNumber}  ${name}${price}`];
-        })
-        : ['  No items'];
-    const comments = order.description
-        ? [`Comments: ${order.description}`]
-        : [];
-    const receipt = [
-        line,
-        fit('FOOD ORDER', width),
-        line,
-        `Order: ${order.order_number}`,
-        `Name:  ${order.customer_name}`,
-        divider,
-        'Qty  Nr   Item              Total',
-        divider,
-        ...itemLines,
-        divider,
-        `TOTAL:${money(order.price).padStart(width - 6, ' ')}`,
-        ...comments,
-        line,
-    ].join('\n');
-    const printWindow = window.open('', '_blank', 'width=480,height=700');
-
-    if (!printWindow) {
-        window.alert('Allow pop-ups to open the ASCII print preview.');
-        return;
-    }
-
-    printWindow.document.write(`
-        <!doctype html>
-        <html>
-            <head>
-                <title>${escapeHtml(order.order_number)} receipt</title>
-                <style>
-                    body { margin: 24px; background: #fff; color: #000; }
-                    pre { font: 14px/1.45 "Courier New", monospace; white-space: pre-wrap; }
-                    @media print { body { margin: 0; } }
-                </style>
-            </head>
-            <body><pre id="receipt"></pre></body>
-        </html>
-    `);
-    printWindow.document.close();
-    printWindow.document.querySelector('#receipt').textContent = receipt;
-    printWindow.focus();
-    printWindow.print();
 }
 
 document.addEventListener('submit', async (event) => {
@@ -528,9 +488,9 @@ document.addEventListener('keydown', async (event) => {
     event.preventDefault();
     const panel = input.closest('#workspacePanel');
     const feedback = panel.querySelector('[data-item-entry-feedback]');
-    const itemNumber = Number(input.value.trim());
+    const itemNumber = input.value.trim();
 
-    if (!Number.isInteger(itemNumber) || itemNumber < 1) {
+    if (!itemNumber) {
         feedback.textContent = 'Enter a valid food item number.';
         return;
     }

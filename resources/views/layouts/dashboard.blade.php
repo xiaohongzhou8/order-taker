@@ -548,9 +548,9 @@
     document.addEventListener('DOMContentLoaded', function() {
         const layout = document.body;
         const sidebarToggles = document.querySelectorAll('[data-sidebar-toggle]');
-        const isCollapsed = window.localStorage.getItem('orders-sidebar-collapsed') === 'true';
+        const sidebarMediaQuery = window.matchMedia('(max-width: 640px)');
 
-        const setSidebarState = (collapsed) => {
+        const setSidebarState = (collapsed, persist = true) => {
             layout.classList.toggle('sidebar-collapsed', collapsed);
             sidebarToggles.forEach((toggle) => {
                 toggle.setAttribute('aria-expanded', String(!collapsed));
@@ -562,10 +562,20 @@
                     document.createTextNode(collapsed ? 'Expand orders sidebar' : 'Collapse orders sidebar')
                 );
             });
-            window.localStorage.setItem('orders-sidebar-collapsed', String(collapsed));
+            if (persist) {
+                window.localStorage.setItem('orders-sidebar-collapsed', String(collapsed));
+            }
         };
 
-        setSidebarState(isCollapsed);
+        const isCollapsed = window.localStorage.getItem('orders-sidebar-collapsed') === 'true';
+        setSidebarState(sidebarMediaQuery.matches || isCollapsed, false);
+        sidebarMediaQuery.addEventListener('change', ({ matches }) => {
+            setSidebarState(
+                matches || window.localStorage.getItem('orders-sidebar-collapsed') === 'true',
+                false
+            );
+        });
+
         sidebarToggles.forEach((toggle) => {
             toggle.addEventListener('click', () => {
                 setSidebarState(!layout.classList.contains('sidebar-collapsed'));

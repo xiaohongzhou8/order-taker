@@ -32,6 +32,6 @@ class Order extends Model
 
     public function items(): HasMany
     {
-        return $this->hasMany(OrderItem::class)->orderBy('item_number');
+        return $this->hasMany(OrderItem::class);
     }
 }

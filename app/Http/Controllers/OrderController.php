@@ -6,6 +6,8 @@ use App\Models\MenuItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends Controller
@@ -22,7 +24,7 @@ class OrderController extends Controller
             'price' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
             'description' => ['nullable', 'string', 'max:5000'],
             'items' => ['nullable', 'array'],
-            'items.*.item_number' => ['required', 'integer', 'exists:menu_items,item_number'],
+            'items.*.item_number' => ['required', 'string', 'max:255', 'exists:menu_items,item_number'],
             'items.*.quantity' => ['required', 'integer', 'min:1', 'max:9999'],
         ]);
 
@@ -85,7 +87,10 @@ class OrderController extends Controller
 
     public function show(Request $request, int $order): Response
     {
-        $ownedOrder = $request->user()->orders()->with('items')->whereKey($order)->firstOrFail();
+        $ownedOrder = $request->user()->orders()
+            ->with(['items' => fn ($query) => $query->orderBy('item_number')])
+            ->whereKey($order)
+            ->firstOrFail();
 
         return response()->json([
             'order' => [
@@ -108,6 +113,67 @@ class OrderController extends Controller
         ]);
     }
 
+    public function print(Request $request, int $order): Response
+    {
+        $ownedOrder = $request->user()->orders()
+            ->with(['items' => fn ($query) => $query->orderBy('item_number')])
+            ->whereKey($order)
+            ->firstOrFail();
+
+        $text = fn (string $value): string => preg_replace('/[^\x20-\x7E]/', ' ', Str::ascii($value));
+        $money = fn ($value): string => 'EUR '.number_format((float) $value, 2, '.', '');
+        $width = 42;
+        $lines = [
+            str_repeat('=', $width),
+            'FOOD ORDER',
+            str_repeat('=', $width),
+            'Order: '.$text($ownedOrder->order_number),
+            'Name:  '.$text($ownedOrder->customer_name),
+            str_repeat('-', $width),
+            'Qty  Nr   Item              Total',
+            str_repeat('-', $width),
+        ];
+
+        foreach ($ownedOrder->items as $item) {
+            $lines[] = str_pad((string) $item->quantity, 3, ' ', STR_PAD_LEFT).'  '
+                .str_pad($text($item->item_number), 3, ' ', STR_PAD_LEFT).'  '
+                .str_pad(substr($text($item->name), 0, 20), 20).' '
+                .str_pad($money($item->price * $item->quantity), 9, ' ', STR_PAD_LEFT);
+        }
+
+        if ($ownedOrder->items->isEmpty()) {
+            $lines[] = '  No items';
+        }
+
+        $lines[] = str_repeat('-', $width);
+        $lines[] = 'TOTAL:'.str_pad($money($ownedOrder->price), $width - 6, ' ', STR_PAD_LEFT);
+
+        if ($ownedOrder->description) {
+            $lines[] = 'Comments: '.$text($ownedOrder->description);
+        }
+
+        $lines[] = str_repeat('=', $width);
+        $fullCut = "\x1dV\x00";
+
+        try {
+            $result = Process::timeout(15)
+                ->input(implode("\n", $lines)."\n\n\n\n\n\n".$fullCut)
+                ->run(['lp', '-d', config('services.printer.queue'), '-o', 'raw']);
+
+            if ($result->failed()) {
+                report(new \RuntimeException('Raw printer submission failed: '.$result->errorOutput()));
+
+                return response()->json(['message' => 'Unable to send the receipt to the printer.'], 502);
+            }
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return response()->json(['message' => 'Unable to send the receipt to the printer.'], 502);
+        }
+
+        return response()->noContent();
+    }
+
     public function updateItem(Request $request, int $order, int $item): Response
     {
         $ownedOrder = $request->user()->orders()->whereKey($order)->firstOrFail();
@@ -126,7 +192,7 @@ class OrderController extends Controller
     {
         $ownedOrder = $request->user()->orders()->whereKey($order)->firstOrFail();
         $validated = $request->validate([
-            'item_number' => ['required', 'integer', 'exists:menu_items,item_number'],
+            'item_number' => ['required', 'string', 'max:255', 'exists:menu_items,item_number'],
         ]);
         $menuItem = MenuItem::query()
             ->where('item_number', $validated['item_number'])

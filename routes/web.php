@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/print', [OrderController::class, 'print'])->name('orders.print');
     Route::patch('/orders/{order}', [OrderController::class, 'update'])->name('orders.update');
     Route::post('/orders/{order}/items', [OrderController::class, 'addItem'])->name('orders.items.store');
     Route::patch('/orders/{order}/items/{item}', [OrderController::class, 'updateItem'])->name('orders.items.update');

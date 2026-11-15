@@ -121,9 +121,19 @@
     display: none;
 }
 
+body:not(.sidebar-collapsed) .sidebar-open-toggle {
+    display: none;
+}
+
 .sidebar-collapsed .sidebar-open-toggle {
     display: grid;
     place-items: center;
+}
+
+@media (min-width: 641px) {
+    .sidebar-collapsed .header-inner .nav-container {
+        margin-right: 3.5rem;
+    }
 }
 
 .btn-login {

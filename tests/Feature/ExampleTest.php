@@ -138,7 +138,7 @@ class ExampleTest extends TestCase
     {
         $user = User::factory()->create();
         MenuItem::create([
-            'item_number' => 1,
+            'item_number' => 'A1',
             'name' => 'Classic Cheeseburger',
             'price' => '12.50',
         ]);
@@ -153,13 +153,14 @@ class ExampleTest extends TestCase
                 'price' => '29.95',
                 'description' => 'Created without a page reload',
                 'items' => [
-                    ['item_number' => 1, 'quantity' => 2],
+                    ['item_number' => 'A1', 'quantity' => 2],
                 ],
             ])
             ->assertCreated()
             ->assertJsonPath('order.customer_name', 'SPA Customer')
             ->assertJsonPath('order.price', '25.00')
             ->assertJsonPath('order.items.0.name', 'Classic Cheeseburger')
+            ->assertJsonPath('order.items.0.item_number', 'A1')
             ->assertJsonPath('order.items.0.quantity', 2);
     }
 
@@ -186,23 +187,29 @@ class ExampleTest extends TestCase
             'customer_name' => 'Item Customer',
         ]);
         MenuItem::create([
-            'item_number' => 7,
+            'item_number' => '7A',
             'name' => 'Chicken Wrap',
             'price' => '8.50',
         ]);
+        MenuItem::create([
+            'item_number' => '1',
+            'name' => 'Chocolate Cake',
+            'price' => '4.00',
+        ]);
 
         $this->actingAs($user)
-            ->postJson("/orders/{$order->id}/items", ['item_number' => 7])
+            ->postJson("/orders/{$order->id}/items", ['item_number' => '7A'])
             ->assertOk()
-            ->assertJsonPath('order.items.0.item_number', 7)
+            ->assertJsonPath('order.items.0.item_number', '7A')
             ->assertJsonPath('order.items.0.quantity', 1)
             ->assertJsonPath('order.price', '8.50');
 
         $this->actingAs($user)
-            ->postJson("/orders/{$order->id}/items", ['item_number' => 7])
+            ->postJson("/orders/{$order->id}/items", ['item_number' => '1'])
             ->assertOk()
-            ->assertJsonPath('order.items.0.quantity', 2)
-            ->assertJsonPath('order.price', '17.00');
+            ->assertJsonPath('order.items.0.item_number', '7A')
+            ->assertJsonPath('order.items.1.item_number', '1')
+            ->assertJsonPath('order.price', '12.50');
     }
 
     public function test_authenticated_user_can_delete_their_order(): void
@@ -231,8 +238,8 @@ class ExampleTest extends TestCase
             'notes' => ['Call before delivery'],
         ]);
         $order->items()->createMany([
-            ['item_number' => 20, 'name' => 'Example product', 'price' => '25.00'],
-            ['item_number' => 10, 'name' => 'Example add-on', 'price' => '10.50'],
+            ['item_number' => '20', 'name' => 'Example product', 'price' => '25.00'],
+            ['item_number' => '10', 'name' => 'Example add-on', 'price' => '10.50'],
         ]);
 
         $this->actingAs($user)
@@ -242,20 +249,20 @@ class ExampleTest extends TestCase
             ->assertJsonPath('order.price', '89.50')
             ->assertJsonPath('order.description', 'Order description')
             ->assertJsonPath('order.items.0.name', 'Example add-on')
-            ->assertJsonPath('order.items.0.item_number', 10)
+            ->assertJsonPath('order.items.0.item_number', '10')
             ->assertJsonPath('order.items.0.quantity', 1)
             ->assertJsonPath('order.items.1.price', '25.00')
-            ->assertJsonPath('order.items.1.item_number', 20);
+            ->assertJsonPath('order.items.1.item_number', '20');
 
-        $firstItem = $order->items()->where('item_number', 10)->firstOrFail();
-        $secondItem = $order->items()->where('item_number', 20)->firstOrFail();
+        $firstItem = $order->items()->where('item_number', '10')->firstOrFail();
+        $secondItem = $order->items()->where('item_number', '20')->firstOrFail();
 
         $this->actingAs($user)
             ->patchJson("/orders/{$order->id}/items/{$firstItem->id}", [
                 'quantity' => 3,
             ])
             ->assertOk()
-            ->assertJsonPath('order.items.0.quantity', 3)
+            ->assertJsonPath('order.items.1.quantity', 3)
             ->assertJsonPath('order.price', '56.50');
 
         $this->actingAs($user)

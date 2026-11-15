@@ -16,7 +16,6 @@ class MenuItem extends Model
     ];
 
     protected $casts = [
-        'item_number' => 'integer',
         'price' => 'decimal:2',
     ];
 }
