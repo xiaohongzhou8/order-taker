@@ -7,7 +7,6 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Process;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends Controller
@@ -129,10 +128,10 @@ class OrderController extends Controller
                 ->pluck('cn_name', 'item_number')
             : collect();
 
-        $text = fn (string $value): string => preg_replace('/[^\x20-\x7E]/', ' ', Str::ascii($value));
+        $text = fn (string $value): string => preg_replace('/[\x00-\x1F\x7F]/', ' ', $value);
         $money = fn ($value): string => 'EUR '.number_format((float) $value, 2, '.', '');
         $queue = $isKitchenPrint ? config('services.printer.kitchen_queue') : config('services.printer.queue');
-        $width = 42;
+        $width = 40;
         $lines = [
             str_repeat('=', $width),
             $isKitchenPrint ? 'KITCHEN ORDER' : 'FOOD ORDER',
@@ -145,12 +144,14 @@ class OrderController extends Controller
         ];
 
         foreach ($ownedOrder->items as $item) {
+            // Determine item name (using Chinese name for kitchen orders)
             $itemName = $isKitchenPrint
                 ? (string) $cnNames->get($item->item_number, '未知')
-                : substr($text($item->name), 0, 20);
-            $itemNameWidth = $isKitchenPrint ? mb_strwidth($itemName, 'UTF-8') : strlen($itemName);
-            $itemName = $isKitchenPrint ? mb_strimwidth($itemName, 0, 20, '', 'UTF-8') : $itemName;
-            $itemNameWidth = $isKitchenPrint ? mb_strwidth($itemName, 'UTF-8') : $itemNameWidth;
+                : $text($item->name);
+
+            $itemName = mb_strimwidth($itemName, 0, 20, '', 'UTF-8');
+            $itemNameWidth = mb_strwidth($itemName, 'UTF-8');
+
             $lines[] = str_pad((string) $item->quantity, 3, ' ', STR_PAD_LEFT).'  '
                 .str_pad($text($item->item_number), 3, ' ', STR_PAD_LEFT).'  '
                 .$itemName.str_repeat(' ', max(0, 20 - $itemNameWidth)).' '
@@ -169,15 +170,15 @@ class OrderController extends Controller
         }
 
         $lines[] = str_repeat('=', $width);
-        $fullCut = "\x1dV\x00";
+        $printData = implode("\n", $lines)."\n\n\n\n\n\n";
 
         try {
             $result = Process::timeout(15)
-                ->input(implode("\n", $lines)."\n\n\n\n\n\n".$fullCut)
-                ->run(['lp', '-d', $queue, '-o', 'raw']);
+                ->input($printData)
+                ->run(['lp', '-d', $queue, '-o', 'cpi=16', '-o', 'page-left=0', '-o', 'page-right=0']);
 
             if ($result->failed()) {
-                report(new \RuntimeException('Raw printer submission failed: '.$result->errorOutput()));
+                report(new \RuntimeException('Printer submission failed: '.$result->errorOutput()));
 
                 return response()->json(['message' => 'Unable to send the receipt to the printer.'], 502);
             }

@@ -13,20 +13,20 @@ class OrderPrintingTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_user_can_submit_their_order_as_a_raw_receipt(): void
+    public function test_user_can_submit_their_order_as_a_receipt(): void
     {
         Process::fake();
         config(['services.printer.queue' => 'receipt-printer']);
         $user = User::factory()->create();
         $order = $user->orders()->create([
             'order_number' => 'ORD-1',
-            'customer_name' => "Alice\x1b",
+            'customer_name' => "小明\x1b",
             'price' => '17.00',
-            'description' => 'No onions',
+            'description' => '不要洋葱',
         ]);
         $order->items()->create([
             'item_number' => 'A1',
-            'name' => 'Wrap',
+            'name' => '鸡肉卷',
             'quantity' => 2,
             'price' => '8.50',
         ]);
@@ -34,14 +34,15 @@ class OrderPrintingTest extends TestCase
         $this->actingAs($user)->postJson("/orders/{$order->id}/print")->assertNoContent();
 
         Process::assertRan(function (PendingProcess $process): bool {
-            return $process->command === ['lp', '-d', 'receipt-printer', '-o', 'raw']
+            return $process->command === ['lp', '-d', 'receipt-printer', '-o', 'cpi=16', '-o', 'page-left=0', '-o', 'page-right=0']
+                && str_starts_with($process->input, str_repeat('=', 40)."\n")
                 && str_contains($process->input, 'Order: ORD-1')
-                && str_contains($process->input, 'Name:  Alice')
-                && str_contains($process->input, 'Wrap')
+                && str_contains($process->input, 'Name:  小明 ')
+                && str_contains($process->input, '鸡肉卷')
                 && str_contains($process->input, 'EUR 17.00')
-                && str_contains($process->input, 'Comments: No onions')
+                && str_contains($process->input, 'Comments: 不要洋葱')
                 && ! str_contains($process->input, "\x1b")
-                && str_ends_with($process->input, "\n\n\n\n\n\n\x1dV\x00");
+                && str_ends_with($process->input, "\n\n\n\n\n\n");
         });
     }
 
@@ -73,7 +74,7 @@ class OrderPrintingTest extends TestCase
             ->assertNoContent();
 
         Process::assertRan(function (PendingProcess $process): bool {
-            return $process->command === ['lp', '-d', 'kitchen-printer', '-o', 'raw']
+            return $process->command === ['lp', '-d', 'kitchen-printer', '-o', 'cpi=16', '-o', 'page-left=0', '-o', 'page-right=0']
                 && str_contains($process->input, 'KITCHEN ORDER')
                 && str_contains($process->input, '鸡卷')
                 && ! str_contains($process->input, 'Loempia met kip');
