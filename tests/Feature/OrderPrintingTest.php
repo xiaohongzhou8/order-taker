@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\MenuItem;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Process\PendingProcess;
@@ -41,6 +42,41 @@ class OrderPrintingTest extends TestCase
                 && str_contains($process->input, 'Comments: No onions')
                 && ! str_contains($process->input, "\x1b")
                 && str_ends_with($process->input, "\n\n\n\n\n\n\x1dV\x00");
+        });
+    }
+
+    public function test_user_can_send_chinese_menu_names_to_the_kitchen_printer(): void
+    {
+        Process::fake();
+        config(['services.printer.kitchen_queue' => 'kitchen-printer']);
+        $menuItem = MenuItem::query()->create([
+            'item_number' => '17a',
+            'name' => 'Loempia met kip',
+            'cn_name' => '鸡卷',
+            'price' => '5.50',
+        ]);
+        $user = User::factory()->create();
+        $order = $user->orders()->create([
+            'order_number' => 'ORD-KITCHEN',
+            'customer_name' => 'Alice',
+            'price' => '5.50',
+        ]);
+        $order->items()->create([
+            'item_number' => $menuItem->item_number,
+            'name' => $menuItem->name,
+            'quantity' => 1,
+            'price' => '5.50',
+        ]);
+
+        $this->actingAs($user)
+            ->postJson("/orders/{$order->id}/print", ['destination' => 'kitchen'])
+            ->assertNoContent();
+
+        Process::assertRan(function (PendingProcess $process): bool {
+            return $process->command === ['lp', '-d', 'kitchen-printer', '-o', 'raw']
+                && str_contains($process->input, 'KITCHEN ORDER')
+                && str_contains($process->input, '鸡卷')
+                && ! str_contains($process->input, 'Loempia met kip');
         });
     }
 

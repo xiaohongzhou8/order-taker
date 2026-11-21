@@ -115,17 +115,27 @@ class OrderController extends Controller
 
     public function print(Request $request, int $order): Response
     {
+        $validated = $request->validate([
+            'destination' => ['sometimes', 'in:kitchen'],
+        ]);
+        $isKitchenPrint = ($validated['destination'] ?? null) === 'kitchen';
         $ownedOrder = $request->user()->orders()
             ->with(['items' => fn ($query) => $query->orderBy('item_number')])
             ->whereKey($order)
             ->firstOrFail();
+        $cnNames = $isKitchenPrint
+            ? MenuItem::query()
+                ->whereIn('item_number', $ownedOrder->items->pluck('item_number'))
+                ->pluck('cn_name', 'item_number')
+            : collect();
 
         $text = fn (string $value): string => preg_replace('/[^\x20-\x7E]/', ' ', Str::ascii($value));
         $money = fn ($value): string => 'EUR '.number_format((float) $value, 2, '.', '');
+        $queue = $isKitchenPrint ? config('services.printer.kitchen_queue') : config('services.printer.queue');
         $width = 42;
         $lines = [
             str_repeat('=', $width),
-            'FOOD ORDER',
+            $isKitchenPrint ? 'KITCHEN ORDER' : 'FOOD ORDER',
             str_repeat('=', $width),
             'Order: '.$text($ownedOrder->order_number),
             'Name:  '.$text($ownedOrder->customer_name),
@@ -135,9 +145,15 @@ class OrderController extends Controller
         ];
 
         foreach ($ownedOrder->items as $item) {
+            $itemName = $isKitchenPrint
+                ? (string) $cnNames->get($item->item_number, '未知')
+                : substr($text($item->name), 0, 20);
+            $itemNameWidth = $isKitchenPrint ? mb_strwidth($itemName, 'UTF-8') : strlen($itemName);
+            $itemName = $isKitchenPrint ? mb_strimwidth($itemName, 0, 20, '', 'UTF-8') : $itemName;
+            $itemNameWidth = $isKitchenPrint ? mb_strwidth($itemName, 'UTF-8') : $itemNameWidth;
             $lines[] = str_pad((string) $item->quantity, 3, ' ', STR_PAD_LEFT).'  '
                 .str_pad($text($item->item_number), 3, ' ', STR_PAD_LEFT).'  '
-                .str_pad(substr($text($item->name), 0, 20), 20).' '
+                .$itemName.str_repeat(' ', max(0, 20 - $itemNameWidth)).' '
                 .str_pad($money($item->price * $item->quantity), 9, ' ', STR_PAD_LEFT);
         }
 
@@ -158,7 +174,7 @@ class OrderController extends Controller
         try {
             $result = Process::timeout(15)
                 ->input(implode("\n", $lines)."\n\n\n\n\n\n".$fullCut)
-                ->run(['lp', '-d', config('services.printer.queue'), '-o', 'raw']);
+                ->run(['lp', '-d', $queue, '-o', 'raw']);
 
             if ($result->failed()) {
                 report(new \RuntimeException('Raw printer submission failed: '.$result->errorOutput()));

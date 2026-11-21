@@ -130,9 +130,12 @@ document.addEventListener('click', async (event) => {
         return;
     }
 
-    if (action.dataset.dashboardAction === 'print') {
+    const printDestination = action.dataset.dashboardAction;
+    const isKitchenPrint = printDestination === 'kitchen';
+
+    if (printDestination === 'print' || isKitchenPrint) {
         if (!selectedOrder) {
-            window.alert('Select an order before printing.');
+            window.alert(isKitchenPrint ? 'Select an order before sending it to the kitchen.' : 'Select an order before printing.');
             return;
         }
 
@@ -141,16 +144,18 @@ document.addEventListener('click', async (event) => {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
+                    'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                 },
+                body: JSON.stringify(isKitchenPrint ? { destination: 'kitchen' } : {}),
             });
 
             if (!response.ok) {
-                window.alert('Unable to send the receipt to the printer.');
+                window.alert(isKitchenPrint ? 'Unable to send the ticket to the kitchen printer.' : 'Unable to send the receipt to the printer.');
             }
         } catch {
-            window.alert('Unable to send the receipt to the printer.');
+            window.alert(isKitchenPrint ? 'Unable to send the ticket to the kitchen printer.' : 'Unable to send the receipt to the printer.');
         }
         return;
     }

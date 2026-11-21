@@ -37,6 +37,7 @@ return [
 
     'printer' => [
         'queue' => env('PRINTER_QUEUE', 'BTP-R880NP-U-1'),
+        'kitchen_queue' => env('KITCHEN_PRINTER_QUEUE', env('PRINTER_QUEUE', 'BTP-R880NP-U-1')),
     ],
 
 ];

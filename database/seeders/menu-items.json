@@ -1,0 +1,1064 @@
+[
+    {
+        "item_number": "1",
+        "name": "Soep Country Side",
+        "cn_name": "召汤",
+        "price": 5.0
+    },
+    {
+        "item_number": "2",
+        "name": "Chinese champignonsoep met kip",
+        "cn_name": "冬菇汤",
+        "price": 3.5
+    },
+    {
+        "item_number": "3",
+        "name": "Champignonsoep met kip",
+        "cn_name": "毛汤",
+        "price": 3.5
+    },
+    {
+        "item_number": "4",
+        "name": "Bamboesoep met kip",
+        "cn_name": "竹汤",
+        "price": 3.5
+    },
+    {
+        "item_number": "5",
+        "name": "Haaivinnensoep met krab en kip",
+        "cn_name": "次汤",
+        "price": 4.5
+    },
+    {
+        "item_number": "6",
+        "name": "Tomatensoep",
+        "cn_name": "茄汤",
+        "price": 3.5
+    },
+    {
+        "item_number": "7",
+        "name": "Kippensoep",
+        "cn_name": "鸡汤",
+        "price": 3.5
+    },
+    {
+        "item_number": "8",
+        "name": "Wantansoep",
+        "cn_name": "吞汤",
+        "price": 5.0
+    },
+    {
+        "item_number": "9",
+        "name": "Kreeftensoep",
+        "cn_name": "龙虾汤",
+        "price": 5.0
+    },
+    {
+        "item_number": "10",
+        "name": "Sam Sie soep",
+        "cn_name": "三鲜汤",
+        "price": 4.5
+    },
+    {
+        "item_number": "12",
+        "name": "Geroosterde varkensribbetjes",
+        "cn_name": "骨头",
+        "price": 5.0
+    },
+    {
+        "item_number": "13",
+        "name": "Kippensaté",
+        "cn_name": "鸡地",
+        "price": 5.5
+    },
+    {
+        "item_number": "14",
+        "name": "Garnalensaté",
+        "cn_name": "虾地",
+        "price": 8.0
+    },
+    {
+        "item_number": "15",
+        "name": "Loempia speciaal",
+        "cn_name": "特卷",
+        "price": 3.5
+    },
+    {
+        "item_number": "16",
+        "name": "Kroepoek",
+        "cn_name": "虾片",
+        "price": 2.5
+    },
+    {
+        "item_number": "17",
+        "name": "Mini loempia's",
+        "cn_name": "小卷",
+        "price": 4.5
+    },
+    {
+        "item_number": "17a",
+        "name": "Loempia met kip",
+        "cn_name": "鸡卷",
+        "price": 5.5
+    },
+    {
+        "item_number": "17b",
+        "name": "Grote loempia vegetarisch",
+        "cn_name": "礻卷",
+        "price": 5.0
+    },
+    {
+        "item_number": "17c",
+        "name": "Loempia met garnalen",
+        "cn_name": "虾卷",
+        "price": 6.5
+    },
+    {
+        "item_number": "18",
+        "name": "Chinese loempia speciaal",
+        "cn_name": "中卷",
+        "price": 4.0
+    },
+    {
+        "item_number": "19",
+        "name": "Gebakken wantan",
+        "cn_name": "炸吞",
+        "price": 5.0
+    },
+    {
+        "item_number": "20",
+        "name": "Gebakken banaan met honing",
+        "cn_name": "炸蕉",
+        "price": 3.0
+    },
+    {
+        "item_number": "21",
+        "name": "Dim Sum Speciaal",
+        "cn_name": "特点",
+        "price": 7.5
+    },
+    {
+        "item_number": "23",
+        "name": "Shao Mai",
+        "cn_name": "烧卖",
+        "price": 4.0
+    },
+    {
+        "item_number": "24",
+        "name": "Ha Kao",
+        "cn_name": "虾饺",
+        "price": 4.8
+    },
+    {
+        "item_number": "25",
+        "name": "Atjar",
+        "cn_name": "阿查",
+        "price": 3.0
+    },
+    {
+        "item_number": "26",
+        "name": "Kerriesaus",
+        "cn_name": "利汁",
+        "price": 3.0
+    },
+    {
+        "item_number": "27",
+        "name": "Pikante saus",
+        "cn_name": "火汁",
+        "price": 3.0
+    },
+    {
+        "item_number": "28",
+        "name": "Zoetzure saus",
+        "cn_name": "古汁",
+        "price": 3.0
+    },
+    {
+        "item_number": "29",
+        "name": "Nasi Goreng",
+        "cn_name": "大饭",
+        "price": 6.0
+    },
+    {
+        "item_number": "30",
+        "name": "Bami Goreng",
+        "cn_name": "大面",
+        "price": 9.6
+    },
+    {
+        "item_number": "31",
+        "name": "Frieten",
+        "cn_name": "薯条",
+        "price": 3.0
+    },
+    {
+        "item_number": "33",
+        "name": "Nasi Goreng Country Side",
+        "cn_name": "召饭",
+        "price": 14.0
+    },
+    {
+        "item_number": "34",
+        "name": "Nasi Goreng Country Side speciaal",
+        "cn_name": "特召饭",
+        "price": 16.5
+    },
+    {
+        "item_number": "35",
+        "name": "Nasi Goreng met grote garnalen",
+        "cn_name": "虾饭",
+        "price": 17.5
+    },
+    {
+        "item_number": "36",
+        "name": "Nasi Goreng Yeung Chow",
+        "cn_name": "扬州饭",
+        "price": 14.0
+    },
+    {
+        "item_number": "37",
+        "name": "Nasi Goreng met runderlapjes",
+        "cn_name": "牛饭",
+        "price": 14.0
+    },
+    {
+        "item_number": "38",
+        "name": "Nasi Goreng met kippenfilet",
+        "cn_name": "鸡饭",
+        "price": 12.5
+    },
+    {
+        "item_number": "39",
+        "name": "Nasi Goreng met kipsaté",
+        "cn_name": "鸡地饭",
+        "price": 12.5
+    },
+    {
+        "item_number": "40",
+        "name": "Nasi Goreng à la Singapore",
+        "cn_name": "星洲饭",
+        "price": 14.0
+    },
+    {
+        "item_number": "41",
+        "name": "Bami Goreng Countryside",
+        "cn_name": "召面",
+        "price": 15.0
+    },
+    {
+        "item_number": "42",
+        "name": "Bami Goreng Country Side speciaal",
+        "cn_name": "特召面",
+        "price": 16.5
+    },
+    {
+        "item_number": "43",
+        "name": "Bami Goreng met grote garnalen",
+        "cn_name": "虾面",
+        "price": 17.5
+    },
+    {
+        "item_number": "44",
+        "name": "Bami Goreng met runderlapjes",
+        "cn_name": "牛面",
+        "price": 15.5
+    },
+    {
+        "item_number": "45",
+        "name": "Bami Goreng met kippenfilet",
+        "cn_name": "鸡面",
+        "price": 14.5
+    },
+    {
+        "item_number": "46",
+        "name": "Bami Goreng met kipsaté",
+        "cn_name": "鸡地面",
+        "price": 14.5
+    },
+    {
+        "item_number": "47",
+        "name": "Miefang Goreng Country side",
+        "cn_name": "召米",
+        "price": 15.0
+    },
+    {
+        "item_number": "48",
+        "name": "Miefang Goreng Country Side speciaal",
+        "cn_name": "特召米",
+        "price": 16.5
+    },
+    {
+        "item_number": "49",
+        "name": "Miefang Goreng Yeung chow",
+        "cn_name": "扬州米",
+        "price": 16.0
+    },
+    {
+        "item_number": "50",
+        "name": "Miefang Goreng met grote garnalen",
+        "cn_name": "虾米",
+        "price": 17.5
+    },
+    {
+        "item_number": "51",
+        "name": "Miefang Goreng met runderlapjes",
+        "cn_name": "牛米",
+        "price": 15.5
+    },
+    {
+        "item_number": "52",
+        "name": "Miefang Goreng met kippenfilet",
+        "cn_name": "鸡米",
+        "price": 14.5
+    },
+    {
+        "item_number": "53",
+        "name": "Miefang Goreng à la singapore",
+        "cn_name": "星洲米",
+        "price": 16.0
+    },
+    {
+        "item_number": "54",
+        "name": "Miefang Goreng vegetarisch",
+        "cn_name": "礻米",
+        "price": 12.0
+    },
+    {
+        "item_number": "55",
+        "name": "Runderlapjes met champignons",
+        "cn_name": "毛牛",
+        "price": 14.5
+    },
+    {
+        "item_number": "56",
+        "name": "Runderlapjes met bamboe",
+        "cn_name": "竹牛",
+        "price": 14.5
+    },
+    {
+        "item_number": "57",
+        "name": "Runderlapjes met ananas en vruchtensaus",
+        "cn_name": "笋牛",
+        "price": 14.5
+    },
+    {
+        "item_number": "58",
+        "name": "Runderlapjes met verse tomaten",
+        "cn_name": "茄牛",
+        "price": 14.5
+    },
+    {
+        "item_number": "59",
+        "name": "Runderlapjes in pikante saus",
+        "cn_name": "火汁牛",
+        "price": 14.5
+    },
+    {
+        "item_number": "60",
+        "name": "Runderlapjes in Balisaus",
+        "cn_name": "巴利牛",
+        "price": 14.5
+    },
+    {
+        "item_number": "61",
+        "name": "Runderlapjes met paprika en zwarte bonensaus",
+        "cn_name": "士汁牛",
+        "price": 14.5
+    },
+    {
+        "item_number": "62",
+        "name": "Runderlapjes in kerriesaus",
+        "cn_name": "利牛",
+        "price": 14.5
+    },
+    {
+        "item_number": "63",
+        "name": "Runderlapjes met 2 soorten Chinese paddestoelen",
+        "cn_name": "双菇牛",
+        "price": 16.5
+    },
+    {
+        "item_number": "64",
+        "name": "Country Side SPECIAAL",
+        "cn_name": "西兰什会",
+        "price": 16.5
+    },
+    {
+        "item_number": "66",
+        "name": "Runderlapjes met 5 soorten kruiden",
+        "cn_name": "五香牛",
+        "price": 14.5
+    },
+    {
+        "item_number": "67",
+        "name": "Runderlapjes met verse broccoli in oestersaus",
+        "cn_name": "西兰牛",
+        "price": 14.5
+    },
+    {
+        "item_number": "68",
+        "name": "Runderlapjes met Kongpo saus en cashewnoten",
+        "cn_name": "宫宝牛",
+        "price": 14.5
+    },
+    {
+        "item_number": "69",
+        "name": "Runderlapjes met asperges en roomsaus",
+        "cn_name": "芦笋牛",
+        "price": 14.5
+    },
+    {
+        "item_number": "70",
+        "name": "Peking eend met sinaasappel en Grand Marnier",
+        "cn_name": "橙鸭",
+        "price": 17.0
+    },
+    {
+        "item_number": "71",
+        "name": "Peking eend met Kongpo saus en cashewnoten",
+        "cn_name": "宫宝鸭",
+        "price": 17.0
+    },
+    {
+        "item_number": "72",
+        "name": "Peking eend in pikante saus",
+        "cn_name": "火汁鸭",
+        "price": 16.5
+    },
+    {
+        "item_number": "73",
+        "name": "Peking eend in kerriesaus",
+        "cn_name": "利鸭",
+        "price": 16.5
+    },
+    {
+        "item_number": "74",
+        "name": "Peking eend met bamboe",
+        "cn_name": "竹鸭",
+        "price": 16.5
+    },
+    {
+        "item_number": "75",
+        "name": "Peking eend met ananas",
+        "cn_name": "菠鸭",
+        "price": 16.5
+    },
+    {
+        "item_number": "76",
+        "name": "Peking eend met 2 soorten Chinese paddestoelen",
+        "cn_name": "双菇鸭",
+        "price": 17.0
+    },
+    {
+        "item_number": "78",
+        "name": "Kikkerbilletjes met uien en look",
+        "cn_name": "洋田鸡",
+        "price": 15.0
+    },
+    {
+        "item_number": "79",
+        "name": "Gepaneerde kikkerbilletjes met zoetzure saus",
+        "cn_name": "召田鸡",
+        "price": 15.5
+    },
+    {
+        "item_number": "80",
+        "name": "Kikkerbilletjes in Balisaus",
+        "cn_name": "巴利田鸡",
+        "price": 15.0
+    },
+    {
+        "item_number": "81",
+        "name": "Kikkerbilletjes in kerriesaus",
+        "cn_name": "利田鸡",
+        "price": 15.0
+    },
+    {
+        "item_number": "82",
+        "name": "Kikkerbilletjes in pikante saus",
+        "cn_name": "火汁田鸡",
+        "price": 15.0
+    },
+    {
+        "item_number": "83",
+        "name": "Kikkerbilletjes met spaanse pepers en fijne kruiden",
+        "cn_name": "召盐田鸡",
+        "price": 15.0
+    },
+    {
+        "item_number": "84",
+        "name": "HA LOK",
+        "cn_name": "虾碌",
+        "price": 18.5
+    },
+    {
+        "item_number": "86",
+        "name": "Gebakken garnalen",
+        "cn_name": "火炸虾",
+        "price": 18.5
+    },
+    {
+        "item_number": "87",
+        "name": "Grote gegrilde garnalen met spaanse pepers",
+        "cn_name": "召盐虾",
+        "price": 18.5
+    },
+    {
+        "item_number": "88",
+        "name": "Grote garnalen met ui en look",
+        "cn_name": "洋虾",
+        "price": 17.5
+    },
+    {
+        "item_number": "89",
+        "name": "Grote garnalen met champignons",
+        "cn_name": "毛虾",
+        "price": 17.5
+    },
+    {
+        "item_number": "90",
+        "name": "Grote garnalen met paprika en zwarte bonensaus",
+        "cn_name": "士汁虾",
+        "price": 17.5
+    },
+    {
+        "item_number": "91",
+        "name": "Grote garnalen met verse tomaten",
+        "cn_name": "茄虾",
+        "price": 17.5
+    },
+    {
+        "item_number": "92",
+        "name": "Grote garnalen in kerriesaus",
+        "cn_name": "利虾",
+        "price": 17.5
+    },
+    {
+        "item_number": "94",
+        "name": "Grote garnalen in Kongpo saus en cashewnoten",
+        "cn_name": "宫宝虾",
+        "price": 17.5
+    },
+    {
+        "item_number": "95",
+        "name": "Grote garnalen in pikante saus",
+        "cn_name": "火汁虾",
+        "price": 17.5
+    },
+    {
+        "item_number": "96",
+        "name": "Grote garnalen met verse broccoli",
+        "cn_name": "西兰虾",
+        "price": 18.5
+    },
+    {
+        "item_number": "97",
+        "name": "Grote garnalen met 2 soorten Chinese paddestoelen",
+        "cn_name": "双菇虾",
+        "price": 18.5
+    },
+    {
+        "item_number": "98",
+        "name": "Grote garnalen met asperges en roomsaus",
+        "cn_name": "芦笋虾",
+        "price": 18.5
+    },
+    {
+        "item_number": "101",
+        "name": "Tong Fong Kai",
+        "cn_name": "中式鸡",
+        "price": 14.5
+    },
+    {
+        "item_number": "103",
+        "name": "Koe Lo Kai",
+        "cn_name": "古鸡",
+        "price": 13.8
+    },
+    {
+        "item_number": "104",
+        "name": "Kippenfilet met champignons.",
+        "cn_name": "毛鸡",
+        "price": 13.3
+    },
+    {
+        "item_number": "105",
+        "name": "Kippenfilet met bamboe",
+        "cn_name": "竹鸡",
+        "price": 13.3
+    },
+    {
+        "item_number": "106",
+        "name": "Kippenfilet met ananas en vruchtensaus.",
+        "cn_name": "菠鸡",
+        "price": 13.3
+    },
+    {
+        "item_number": "107",
+        "name": "Kippenfilet met pikante saus.",
+        "cn_name": "火汁鸡",
+        "price": 13.3
+    },
+    {
+        "item_number": "108",
+        "name": "Kippenfilet met verse tomaten.",
+        "cn_name": "茄鸡",
+        "price": 13.3
+    },
+    {
+        "item_number": "109",
+        "name": "Kippenfilet met paprika en zwarte bonensaus",
+        "cn_name": "豉椒鸡",
+        "price": 13.3
+    },
+    {
+        "item_number": "110",
+        "name": "Kippenfilet met kerriesaus",
+        "cn_name": "咖喱鸡",
+        "price": 13.3
+    },
+    {
+        "item_number": "111",
+        "name": "Kippenfilet met 2 soorten chinese paddestoelen",
+        "cn_name": "双菇鸡",
+        "price": 14.0
+    },
+    {
+        "item_number": "113",
+        "name": "Kippenfilet in Kongpo saus en cashewnoten",
+        "cn_name": "宫保鸡",
+        "price": 14.0
+    },
+    {
+        "item_number": "115",
+        "name": "Kippenfilet met uien en look.",
+        "cn_name": "葱蒜鸡",
+        "price": 13.3
+    },
+    {
+        "item_number": "116",
+        "name": "Kippenfilet met verse broccoli",
+        "cn_name": "西兰鸡",
+        "price": 14.0
+    },
+    {
+        "item_number": "117",
+        "name": "Kippenfilet met asperges en roomsaus",
+        "cn_name": "芦笋鸡",
+        "price": 14.0
+    },
+    {
+        "item_number": "121",
+        "name": "TJA SIL",
+        "cn_name": "叉烧",
+        "price": 15.5
+    },
+    {
+        "item_number": "122",
+        "name": "WOl TJA SIl",
+        "cn_name": "五柳肉",
+        "price": 15.5
+    },
+    {
+        "item_number": "123",
+        "name": "WOI PAl KWAK",
+        "cn_name": "特色肉",
+        "price": 15.5
+    },
+    {
+        "item_number": "124",
+        "name": "Babi pangang",
+        "cn_name": "叉烧肉",
+        "price": 15.9
+    },
+    {
+        "item_number": "125",
+        "name": "Koe Lo Yuk",
+        "cn_name": "咕噜肉",
+        "price": 13.5
+    },
+    {
+        "item_number": "126",
+        "name": "Varkensvlees met champignons",
+        "cn_name": "毛猪",
+        "price": 13.5
+    },
+    {
+        "item_number": "127",
+        "name": "Varkensvlees in kerriesaus",
+        "cn_name": "咖喱猪",
+        "price": 13.5
+    },
+    {
+        "item_number": "128",
+        "name": "Varkensvlees met verse tomaten",
+        "cn_name": "茄猪",
+        "price": 13.5
+    },
+    {
+        "item_number": "129",
+        "name": "Varkens met paprika en zwarte bonensaus",
+        "cn_name": "豉椒猪",
+        "price": 13.5
+    },
+    {
+        "item_number": "130",
+        "name": "Varkensvlees met 2 soorten Chinese paddestoelen",
+        "cn_name": "双菇猪",
+        "price": 14.8
+    },
+    {
+        "item_number": "131",
+        "name": "Varkensvlees met asperges en roomsaus",
+        "cn_name": "芦笋猪",
+        "price": 13.5
+    },
+    {
+        "item_number": "132",
+        "name": "varkensvlees in Kongpo saus en cashewnoten",
+        "cn_name": "宫保猪",
+        "price": 13.5
+    },
+    {
+        "item_number": "134",
+        "name": "Varkensvlees met ananas en vruchtensaus",
+        "cn_name": "菠萝猪",
+        "price": 13.5
+    },
+    {
+        "item_number": "135",
+        "name": "Varkensvlees in pikante saus",
+        "cn_name": "火汁猪",
+        "price": 13.5
+    },
+    {
+        "item_number": "136",
+        "name": "Geroosterde varkensribben in zoetzure saus",
+        "cn_name": "糖醋骨",
+        "price": 15.5
+    },
+    {
+        "item_number": "137",
+        "name": "Gepaneerde tongfilet in zoetzure saus.",
+        "cn_name": "糖醋龙利",
+        "price": 17.0
+    },
+    {
+        "item_number": "138",
+        "name": "Gebraden tongfilet met uien en look",
+        "cn_name": "葱蒜龙利",
+        "price": 16.5
+    },
+    {
+        "item_number": "139",
+        "name": "Gebraden tongfilet met paprika en zwarte bonensaus",
+        "cn_name": "豉椒龙利",
+        "price": 16.5
+    },
+    {
+        "item_number": "140",
+        "name": "Gebraden tongfilet in kerriesaus",
+        "cn_name": "咖喱龙利",
+        "price": 16.5
+    },
+    {
+        "item_number": "141",
+        "name": "Samkwak",
+        "cn_name": "三鲜锅",
+        "price": 19.0
+    },
+    {
+        "item_number": "142",
+        "name": "Gepaneerde tongfilet met Spaanse pepers.",
+        "cn_name": "椒盐龙利",
+        "price": 17.0
+    },
+    {
+        "item_number": "144",
+        "name": "Gebraden tongfilet in Kongpo saus met cashewnoten",
+        "cn_name": "宫保龙利",
+        "price": 17.0
+    },
+    {
+        "item_number": "145",
+        "name": "Gebraden tongfilet met 2 soorten Chinese paddestoelen",
+        "cn_name": "双菇龙利",
+        "price": 17.9
+    },
+    {
+        "item_number": "146",
+        "name": "Inktvis met 2 soorten Chinese paddestoelen",
+        "cn_name": "双菇鱿鱼",
+        "price": 15.5
+    },
+    {
+        "item_number": "148",
+        "name": "Inktvis in Kongpo saus met cashewnoten",
+        "cn_name": "宫保鱿鱼",
+        "price": 15.5
+    },
+    {
+        "item_number": "150",
+        "name": "Gepaneerde inktvis met spaanse pepers en tuinkruiden",
+        "cn_name": "香辣鱿鱼",
+        "price": 14.5
+    },
+    {
+        "item_number": "151",
+        "name": "Gepaneerde inktvis met uien en look",
+        "cn_name": "葱蒜鱿鱼",
+        "price": 14.5
+    },
+    {
+        "item_number": "152",
+        "name": "Inktvis met paprika en zwarte bonensaus",
+        "cn_name": "豉椒鱿鱼",
+        "price": 14.5
+    },
+    {
+        "item_number": "153",
+        "name": "Inktvis in Balisaus",
+        "cn_name": "巴厘鱿鱼",
+        "price": 14.5
+    },
+    {
+        "item_number": "154",
+        "name": "Inktvis in kerriesaus",
+        "cn_name": "咖喱鱿鱼",
+        "price": 14.5
+    },
+    {
+        "item_number": "155",
+        "name": "Tjap Tjoy Country Side",
+        "cn_name": "召杂菜",
+        "price": 14.5
+    },
+    {
+        "item_number": "156",
+        "name": "TJap TJoy met grote garnalen",
+        "cn_name": "虾杂菜",
+        "price": 17.5
+    },
+    {
+        "item_number": "157",
+        "name": "Tjap Tjoy met varkensvlees",
+        "cn_name": "猪杂菜",
+        "price": 13.5
+    },
+    {
+        "item_number": "158",
+        "name": "Tjap Tjoy met kippenfilet",
+        "cn_name": "鸡杂菜",
+        "price": 13.5
+    },
+    {
+        "item_number": "159",
+        "name": "Tjap Tjoy vegetarisch",
+        "cn_name": "礻杂菜",
+        "price": 11.5
+    },
+    {
+        "item_number": "160",
+        "name": "Tjap Tjoy met runderlapjes",
+        "cn_name": "牛杂菜",
+        "price": 14.5
+    },
+    {
+        "item_number": "161",
+        "name": "Chap Kam met kippenfilet",
+        "cn_name": "鸡杂烩",
+        "price": 13.5
+    },
+    {
+        "item_number": "162",
+        "name": "Chap Kam met runderlapjes",
+        "cn_name": "牛杂烩",
+        "price": 14.5
+    },
+    {
+        "item_number": "163",
+        "name": "Chap Kam met varkensvlees",
+        "cn_name": "猪杂烩",
+        "price": 13.5
+    },
+    {
+        "item_number": "164",
+        "name": "Chap Kam met garnalen",
+        "cn_name": "虾杂烩",
+        "price": 17.5
+    },
+    {
+        "item_number": "165",
+        "name": "Chap Kam met tongfilet",
+        "cn_name": "龙利杂烩",
+        "price": 16.9
+    },
+    {
+        "item_number": "166",
+        "name": "Chap Kam met kikkerbilletjes",
+        "cn_name": "田鸡杂烩",
+        "price": 14.5
+    },
+    {
+        "item_number": "167",
+        "name": "Chap Kam met inktvis",
+        "cn_name": "鱿鱼杂烩",
+        "price": 13.5
+    },
+    {
+        "item_number": "168",
+        "name": "Chap Kam met peking eend",
+        "cn_name": "鸭杂烩",
+        "price": 16.2
+    },
+    {
+        "item_number": "169",
+        "name": "Chap Kam vegetarisch",
+        "cn_name": "礻杂烩",
+        "price": 12.5
+    },
+    {
+        "item_number": "176",
+        "name": "Foe Yong Hai - vegetarisch",
+        "cn_name": "礻芙蓉",
+        "price": 12.5
+    },
+    {
+        "item_number": "177",
+        "name": "Foe Yong Hai met gesneden kippenblokjes",
+        "cn_name": "鸡芙蓉",
+        "price": 13.5
+    },
+    {
+        "item_number": "178",
+        "name": "Foe Yong Hai met Kleine garnalen en geroosterde vlees",
+        "cn_name": "虾芙蓉",
+        "price": 13.5
+    },
+    {
+        "item_number": "179",
+        "name": "Foe Yong Hai met grote Chinese garnalen",
+        "cn_name": "大虾芙蓉",
+        "price": 17.5
+    },
+    {
+        "item_number": "180",
+        "name": "Foe Yong Hai Country Side",
+        "cn_name": "召芙蓉",
+        "price": 14.5
+    },
+    {
+        "item_number": "181",
+        "name": "Kip op 3 wijzen (2p)",
+        "cn_name": "三味鸡2",
+        "price": 30.8
+    },
+    {
+        "item_number": "182",
+        "name": "Eend op 3 wijzen (2p)",
+        "cn_name": "三味鸭2",
+        "price": 45.0
+    },
+    {
+        "item_number": "183",
+        "name": "Garnalen op 3 wijzen (2p)",
+        "cn_name": "三味虾2",
+        "price": 48.0
+    },
+    {
+        "item_number": "184",
+        "name": "CHINESE RIJSTTAFEL (2p)",
+        "cn_name": "中宴2",
+        "price": 42.8
+    },
+    {
+        "item_number": "184a",
+        "name": "CHINESE RIJSTTAFEL (3p)",
+        "cn_name": "中宴3",
+        "price": 64.2
+    },
+    {
+        "item_number": "184b",
+        "name": "CHINESE RIJSTTAFEL (4p)",
+        "cn_name": "中宴4",
+        "price": 85.6
+    },
+    {
+        "item_number": "184c",
+        "name": "CHINESE RIJSTTAFEL (5p)",
+        "cn_name": "中宴5",
+        "price": 107.0
+    },
+    {
+        "item_number": "185",
+        "name": "SEA FOOD MENU (2p)",
+        "cn_name": "海鲜宴2",
+        "price": 52.8
+    },
+    {
+        "item_number": "185a",
+        "name": "SEA FOOD MENU (3p)",
+        "cn_name": "海鲜宴3",
+        "price": 79.2
+    },
+    {
+        "item_number": "185b",
+        "name": "SEA FOOD MENU (4p)",
+        "cn_name": "海鲜宴4",
+        "price": 105.6
+    },
+    {
+        "item_number": "185c",
+        "name": "SEA FOOD MENU (5p)",
+        "cn_name": "海鲜宴5",
+        "price": 132.0
+    },
+    {
+        "item_number": "186",
+        "name": "RIJSTTAFEL Country Side (2p)",
+        "cn_name": "召宴2",
+        "price": 46.8
+    },
+    {
+        "item_number": "186a",
+        "name": "RIJSTTAFEL Country Side (3p)",
+        "cn_name": "召宴3",
+        "price": 70.2
+    },
+    {
+        "item_number": "186b",
+        "name": "RIJSTTAFEL Country Side (4p)",
+        "cn_name": "召宴4",
+        "price": 93.6
+    },
+    {
+        "item_number": "186c",
+        "name": "RIJSTTAFEL Country Side (5p)",
+        "cn_name": "召宴5",
+        "price": 117.0
+    },
+    {
+        "item_number": "187",
+        "name": "SZECHUAN RIJSTTAFELS (2p)",
+        "cn_name": "川宴2",
+        "price": 46.8
+    },
+    {
+        "item_number": "187a",
+        "name": "SZECHUAN RIJSTTAFELS (3p)",
+        "cn_name": "川宴3",
+        "price": 70.2
+    },
+    {
+        "item_number": "187b",
+        "name": "SZECHUAN RIJSTTAFELS (4p)",
+        "cn_name": "川宴4",
+        "price": 93.6
+    },
+    {
+        "item_number": "187c",
+        "name": "SZECHUAN RIJSTTAFELS (5p)",
+        "cn_name": "川宴5",
+        "price": 117.0
+    }
+]

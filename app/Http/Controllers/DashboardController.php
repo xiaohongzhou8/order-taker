@@ -27,7 +27,7 @@ class DashboardController extends Controller
                 'selectedOrderId' => null,
             ],
             'menuItems' => MenuItem::query()
-                ->select(['item_number', 'name', 'price'])
+                ->select(['item_number', 'name', 'cn_name', 'price'])
                 ->orderBy('item_number')
                 ->get(),
             'selectedDate' => $selectedDate,

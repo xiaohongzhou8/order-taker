@@ -53,6 +53,12 @@ class ExampleTest extends TestCase
     public function test_dashboard_requires_authentication_and_loads_orders(): void
     {
         $user = User::factory()->create();
+        MenuItem::query()->create([
+            'item_number' => '17a',
+            'name' => 'Loempia met kip',
+            'cn_name' => '鸡卷',
+            'price' => 5.5,
+        ]);
         $order = $user->orders()->create([
             'order_number' => '1001',
             'customer_name' => 'Example Customer',
@@ -60,11 +66,14 @@ class ExampleTest extends TestCase
 
         $this->get('/dashboard')->assertRedirectToRoute('login');
 
-        $this->actingAs($user)
+        $response = $this->actingAs($user)
             ->get('/dashboard')
             ->assertOk()
             ->assertViewIs('layouts.dashboard')
-            ->assertSee($order->customer_name);
+            ->assertSee($order->customer_name)
+            ->assertSee('Kitchen');
+
+        $response->assertViewHas('menuItems', fn ($menuItems) => $menuItems->contains('cn_name', '鸡卷'));
     }
 
     public function test_dashboard_filters_orders_by_selected_date(): void

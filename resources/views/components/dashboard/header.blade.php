@@ -12,6 +12,10 @@
                         <i class="fa-solid fa-print" aria-hidden="true"></i>
                         Print
                     </button>
+                    <button type="button" class="header-action-button" data-dashboard-action="kitchen" aria-label="Print kitchen ticket">
+                        <i class="fa-solid fa-utensils" aria-hidden="true"></i>
+                        Kitchen
+                    </button>
                     <a href="{{ route('orders.create') }}" class="new-order-button" data-dashboard-action="new-order">
                         New order
                         <i class="fa-solid fa-plus" aria-hidden="true"></i>

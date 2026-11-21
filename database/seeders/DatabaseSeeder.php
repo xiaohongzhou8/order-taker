@@ -7,22 +7,18 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 use RuntimeException;
-use ZipArchive;
 
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
-
-    private const MenuSourceUrl = 'https://drive.usercontent.google.com/download?id=1NipSK_ZEEAskgjyJ12ZkVhpJeRmq6ypB&export=download&confirm=t';
 
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $menuItems = $this->loadMenuItems();
 
         User::query()->firstOrCreate(
             ['email' => 'test@example.com'],
@@ -31,8 +27,6 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password'),
             ],
         );
-
-        $menuItems = $this->downloadMenuItems();
 
         foreach ($menuItems as $menuItem) {
             MenuItem::query()->updateOrCreate(
@@ -47,188 +41,45 @@ class DatabaseSeeder extends Seeder
     }
 
     /**
-     * @return list<array{item_number: string, name: string, price: float}>
+     * @return list<array{item_number: string, name: string, cn_name: string, price: int|float}>
      */
-    private function downloadMenuItems(): array
+    private function loadMenuItems(): array
     {
-        $response = Http::connectTimeout(3)
-            ->timeout(20)
-            ->get(self::MenuSourceUrl)
-            ->throw();
+        $contents = file_get_contents(database_path('seeders/menu-items.json'));
 
-        $temporaryFile = tempnam(sys_get_temp_dir(), 'menu-items-');
-
-        if ($temporaryFile === false) {
-            throw new RuntimeException('Unable to create a temporary menu spreadsheet.');
+        if ($contents === false) {
+            throw new RuntimeException('Unable to read the local menu items file.');
         }
 
-        try {
-            if (file_put_contents($temporaryFile, $response->body()) === false) {
-                throw new RuntimeException('Unable to save the menu spreadsheet.');
-            }
+        $menuItems = json_decode($contents, true, flags: JSON_THROW_ON_ERROR);
 
-            return $this->parseMenuSpreadsheet($temporaryFile);
-        } finally {
-            unlink($temporaryFile);
-        }
-    }
-
-    /**
-     * @return list<array{item_number: string, name: string, price: float}>
-     */
-    private function parseMenuSpreadsheet(string $spreadsheetPath): array
-    {
-        $archive = new ZipArchive;
-
-        if ($archive->open($spreadsheetPath) !== true) {
-            throw new RuntimeException('The downloaded menu source is not a valid Excel workbook.');
+        if (! is_array($menuItems) || ! array_is_list($menuItems) || $menuItems === []) {
+            throw new RuntimeException('The local menu items file must contain a non-empty JSON list.');
         }
 
-        try {
-            $worksheet = $this->loadXml($archive->getFromName('xl/worksheets/sheet1.xml'));
-            $sharedStrings = $this->sharedStrings($archive);
-        } finally {
-            $archive->close();
-        }
+        $itemNumbers = [];
 
-        $namespace = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
-        $items = [];
-        $sheetData = $worksheet->children($namespace)->sheetData;
-        $pendingPackage = null;
-
-        foreach ($sheetData->children($namespace)->row as $row) {
-            $cells = [];
-
-            foreach ($row->children($namespace)->c as $cell) {
-                $attributes = $cell->attributes();
-                $column = preg_replace('/\d+/', '', (string) $attributes['r']);
-                $value = (string) $cell->children($namespace)->v;
-
-                if ((string) $attributes['t'] === 's') {
-                    $value = $sharedStrings[(int) $value] ?? '';
-                }
-
-                $cells[$column] = trim($value);
-            }
-
+        foreach ($menuItems as $menuItem) {
             if (
-                isset($cells['A'], $cells['B'])
-                && $cells['A'] !== ''
-                && ($cells['C'] ?? '') === ''
-                && is_numeric($cells['A'])
-                && (float) $cells['A'] === (float) (int) $cells['A']
+                ! is_array($menuItem)
+                || ! is_string($menuItem['item_number'] ?? null)
+                || trim($menuItem['item_number']) === ''
+                || ! is_string($menuItem['name'] ?? null)
+                || trim($menuItem['name']) === ''
+                || ! is_string($menuItem['cn_name'] ?? null)
+                || trim($menuItem['cn_name']) === ''
+                || (! is_int($menuItem['price'] ?? null) && ! is_float($menuItem['price'] ?? null))
             ) {
-                $pendingPackage = [
-                    'item_number' => (string) (int) $cells['A'],
-                    'name' => $cells['B'],
-                ];
-
-                continue;
+                throw new RuntimeException('The local menu items file contains an invalid menu item.');
             }
 
-            if (
-                $pendingPackage !== null
-                && isset($cells['B'], $cells['C'])
-                && preg_match('/^Voor\s+(\d+)\s+personen$/iu', $cells['B'], $matches) === 1
-                && is_numeric($cells['C'])
-            ) {
-                $persons = (int) $matches[1];
-                $itemNumber = $pendingPackage['item_number'].($persons > 2 ? $this->personSuffix($persons) : '');
-
-                if (! isset($items[$itemNumber])) {
-                    $items[$itemNumber] = [
-                        'item_number' => $itemNumber,
-                        'name' => $pendingPackage['name'].' ('.$persons.' personen)',
-                        'price' => (float) $cells['C'],
-                    ];
-                }
-
-                continue;
+            if (isset($itemNumbers[$menuItem['item_number']])) {
+                throw new RuntimeException('The local menu items file contains a duplicate item number.');
             }
 
-            if (! isset($cells['A'], $cells['B'], $cells['C']) || $cells['A'] === '' || ! is_numeric($cells['C'])) {
-                continue;
-            }
-
-            $pendingPackage = null;
-            $itemNumber = $cells['A'];
-
-            if (is_numeric($itemNumber)) {
-                if ((float) $itemNumber !== (float) (int) $itemNumber) {
-                    continue;
-                }
-
-                $itemNumber = (string) (int) $itemNumber;
-            }
-
-            if (isset($items[$itemNumber])) {
-                continue;
-            }
-
-            $items[$itemNumber] = [
-                'item_number' => $itemNumber,
-                'name' => $cells['B'],
-                'price' => (float) $cells['C'],
-            ];
+            $itemNumbers[$menuItem['item_number']] = true;
         }
 
-        if ($items === []) {
-            throw new RuntimeException('The menu spreadsheet did not contain any menu items.');
-        }
-
-        return array_values($items);
-    }
-
-    private function personSuffix(int $persons): string
-    {
-        $index = $persons - 3;
-        $suffix = '';
-
-        do {
-            $suffix = chr(97 + ($index % 26)).$suffix;
-            $index = intdiv($index, 26) - 1;
-        } while ($index >= 0);
-
-        return $suffix;
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function sharedStrings(ZipArchive $archive): array
-    {
-        $sharedStringsXml = $archive->getFromName('xl/sharedStrings.xml');
-
-        if ($sharedStringsXml === false) {
-            return [];
-        }
-
-        $namespace = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
-        $sharedStrings = [];
-
-        foreach ($this->loadXml($sharedStringsXml)->children($namespace)->si as $string) {
-            $textNodes = $string->xpath('.//*[local-name() = "t"]') ?: [];
-            $sharedStrings[] = implode('', array_map(
-                static fn ($text): string => (string) $text,
-                $textNodes,
-            ));
-        }
-
-        return $sharedStrings;
-    }
-
-    private function loadXml(string|false $xml): \SimpleXMLElement
-    {
-        if ($xml === false) {
-            throw new RuntimeException('The menu spreadsheet is missing required worksheet data.');
-        }
-
-        $document = simplexml_load_string($xml, options: LIBXML_NONET);
-
-        if ($document === false) {
-            throw new RuntimeException('The menu spreadsheet contains invalid worksheet data.');
-        }
-
-        return $document;
+        return $menuItems;
     }
 }
