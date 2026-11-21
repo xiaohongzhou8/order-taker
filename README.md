@@ -1,58 +1,99 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Order Taker
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Order Taker is a Laravel application for creating and managing food orders. It can print customer receipts and kitchen tickets, including Chinese menu names, through configured CUPS printer queues.
 
-## About Laravel
+## Requirements
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Install the following software before setting up the project:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- PHP `^8.3`
+- Composer
+- Node.js and npm
+- A database: SQLite is the default; MySQL and PostgreSQL are also supported
+- CUPS and the `lp` command, plus configured printer queues, if you want to print orders
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Installing Prerequisites
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+On Debian or Ubuntu, use repositories that provide PHP 8.3 or later. Install PHP CLI and the extensions used by the app, then install Composer:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+sudo apt update
+sudo apt install curl php-cli php-curl php-mbstring php-sqlite3 php-xml unzip
+sudo apt install composer
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Verify the installed versions before continuing:
 
-## Contributing
+```bash
+php -v
+composer --version
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Install Node.js 22 and its bundled npm using NodeSource:
 
-## Code of Conduct
+```bash
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Vite requires Node.js `^20.19` or `>=22.12`. Verify Node.js and npm with `node --version` and `npm --version`. Alternatively, use the [official Node.js download page](https://nodejs.org/en/download).
 
-## Security Vulnerabilities
+For printing, install CUPS and its command-line client:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+sudo apt install cups cups-client
+```
 
-## License
+For MySQL or PostgreSQL, install and configure the database server and the matching PHP extension (`php-mysql` or `php-pgsql`) before running setup. Confirm PHP and Node.js versions with `php -v` and `node --version`.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Installation
+
+From the project directory, run:
+
+```bash
+composer setup
+```
+
+The setup script installs Composer dependencies, creates `.env` if it does not exist, generates the application key, runs migrations, installs npm dependencies, and builds the frontend assets. SQLite is used by default. To use MySQL or PostgreSQL, create and configure `.env` before running setup so the migrations use the intended database.
+
+## Printer Configuration
+
+Printing requires CUPS queues on the same host as the application. List available queues with:
+
+```bash
+lpstat -p
+```
+
+Set the queue names in `.env`:
+
+```dotenv
+PRINTER_QUEUE=receipt-queue
+KITCHEN_PRINTER_QUEUE=kitchen-queue
+```
+
+If `KITCHEN_PRINTER_QUEUE` is omitted, kitchen tickets use `PRINTER_QUEUE`. Chinese text rendering depends on the selected queue's CUPS driver and printer support.
+
+## Development
+
+Start the local development environment with:
+
+```bash
+composer dev
+```
+
+To run only the Vite development server with Hot Module Replacement:
+
+```bash
+npm run dev
+```
+
+## Testing
+
+Run the PHPUnit test suite with:
+
+```bash
+composer test
+```
+
+Automated tests do not send real printer jobs, so verify receipt layout on the target CUPS queue.
+
