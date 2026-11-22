@@ -218,6 +218,7 @@ document.addEventListener('click', async (event) => {
         document.querySelectorAll('.order-item').forEach((item) => item.classList.remove('active'));
         orderItem.classList.add('active');
         renderOrderDetails(order, true);
+        openItemModal();
         window.history.pushState({}, '', `/orders/${order.id}`);
     }
 });

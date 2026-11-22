@@ -131,6 +131,7 @@ class OrderController extends Controller
         $text = fn (string $value): string => preg_replace('/[\x00-\x1F\x7F]/', ' ', $value);
         $money = fn ($value): string => 'EUR '.number_format((float) $value, 2, '.', '');
         $queue = $isKitchenPrint ? config('services.printer.kitchen_queue') : config('services.printer.queue');
+        $charactersPerInch = $isKitchenPrint ? 14 : 16;
         $width = 40;
         $lines = [
             str_repeat('=', $width),
@@ -149,12 +150,15 @@ class OrderController extends Controller
                 ? (string) $cnNames->get($item->item_number, '未知')
                 : $text($item->name);
 
-            $itemName = mb_strimwidth($itemName, 0, 20, '', 'UTF-8');
+            $itemNameColumnWidth = $isKitchenPrint ? 14 : 20;
+            $itemName = $isKitchenPrint
+                ? mb_substr($itemName, 0, 5, 'UTF-8')
+                : mb_strimwidth($itemName, 0, $itemNameColumnWidth, '', 'UTF-8');
             $itemNameWidth = mb_strwidth($itemName, 'UTF-8');
 
             $lines[] = str_pad((string) $item->quantity, 3, ' ', STR_PAD_LEFT).'  '
                 .str_pad($text($item->item_number), 3, ' ', STR_PAD_LEFT).'  '
-                .$itemName.str_repeat(' ', max(0, 20 - $itemNameWidth)).' '
+                .$itemName.str_repeat(' ', max(0, $itemNameColumnWidth - $itemNameWidth)).' '
                 .str_pad($money($item->price * $item->quantity), 9, ' ', STR_PAD_LEFT);
         }
 
@@ -163,7 +167,7 @@ class OrderController extends Controller
         }
 
         $lines[] = str_repeat('-', $width);
-        $lines[] = 'TOTAL:'.str_pad($money($ownedOrder->price), $width - 6, ' ', STR_PAD_LEFT);
+        $lines[] = 'TOTAL:'.str_pad($money($ownedOrder->price), $width - 10, ' ', STR_PAD_LEFT);
 
         if ($ownedOrder->description) {
             $lines[] = 'Comments: '.$text($ownedOrder->description);
@@ -171,11 +175,19 @@ class OrderController extends Controller
 
         $lines[] = str_repeat('=', $width);
         $printData = implode("\n", $lines)."\n\n\n\n\n\n";
+        $printFile = tempnam(sys_get_temp_dir(), 'order-print-');
 
         try {
+            if ($printFile === false) {
+                throw new \RuntimeException('Unable to create the temporary print file.');
+            }
+
+            if (file_put_contents($printFile, $printData) === false) {
+                throw new \RuntimeException('Unable to write the temporary print file.');
+            }
+
             $result = Process::timeout(15)
-                ->input($printData)
-                ->run(['lp', '-d', $queue, '-o', 'cpi=16', '-o', 'page-left=0', '-o', 'page-right=0']);
+                ->run(['lp', '-d', $queue, '-o', 'cpi='.$charactersPerInch, '-o', 'page-left=0', '-o', 'page-right=0', $printFile]);
 
             if ($result->failed()) {
                 report(new \RuntimeException('Printer submission failed: '.$result->errorOutput()));
@@ -186,6 +198,10 @@ class OrderController extends Controller
             report($exception);
 
             return response()->json(['message' => 'Unable to send the receipt to the printer.'], 502);
+        } finally {
+            if ($printFile !== false && is_file($printFile)) {
+                unlink($printFile);
+            }
         }
 
         return response()->noContent();

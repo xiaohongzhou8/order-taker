@@ -15,7 +15,14 @@ class OrderPrintingTest extends TestCase
 
     public function test_user_can_submit_their_order_as_a_receipt(): void
     {
-        Process::fake();
+        $printedFile = null;
+        $printData = null;
+        Process::fake(function (PendingProcess $process) use (&$printedFile, &$printData) {
+            $printedFile = $process->command[9] ?? null;
+            $printData = is_string($printedFile) ? file_get_contents($printedFile) : false;
+
+            return Process::result();
+        });
         config(['services.printer.queue' => 'receipt-printer']);
         $user = User::factory()->create();
         $order = $user->orders()->create([
@@ -33,27 +40,38 @@ class OrderPrintingTest extends TestCase
 
         $this->actingAs($user)->postJson("/orders/{$order->id}/print")->assertNoContent();
 
-        Process::assertRan(function (PendingProcess $process): bool {
-            return $process->command === ['lp', '-d', 'receipt-printer', '-o', 'cpi=16', '-o', 'page-left=0', '-o', 'page-right=0']
-                && str_starts_with($process->input, str_repeat('=', 40)."\n")
-                && str_contains($process->input, 'Order: ORD-1')
-                && str_contains($process->input, 'Name:  小明 ')
-                && str_contains($process->input, '鸡肉卷')
-                && str_contains($process->input, 'EUR 17.00')
-                && str_contains($process->input, 'Comments: 不要洋葱')
-                && ! str_contains($process->input, "\x1b")
-                && str_ends_with($process->input, "\n\n\n\n\n\n");
+        Process::assertRan(function (PendingProcess $process) use (&$printedFile): bool {
+            return is_string($printedFile)
+                && $process->command === ['lp', '-d', 'receipt-printer', '-o', 'cpi=16', '-o', 'page-left=0', '-o', 'page-right=0', $printedFile];
         });
+        $this->assertIsString($printedFile);
+        $this->assertFileDoesNotExist($printedFile);
+        $this->assertIsString($printData);
+        $this->assertStringStartsWith(str_repeat('=', 40)."\n", $printData);
+        $this->assertStringContainsString('Order: ORD-1', $printData);
+        $this->assertStringContainsString('Name:  小明 ', $printData);
+        $this->assertStringContainsString('鸡肉卷', $printData);
+        $this->assertStringContainsString('EUR 17.00', $printData);
+        $this->assertStringContainsString('Comments: 不要洋葱', $printData);
+        $this->assertStringNotContainsString("\x1b", $printData);
+        $this->assertStringEndsWith("\n\n\n\n\n\n", $printData);
     }
 
     public function test_user_can_send_chinese_menu_names_to_the_kitchen_printer(): void
     {
-        Process::fake();
+        $printedFile = null;
+        $printData = null;
+        Process::fake(function (PendingProcess $process) use (&$printedFile, &$printData) {
+            $printedFile = $process->command[9] ?? null;
+            $printData = is_string($printedFile) ? file_get_contents($printedFile) : false;
+
+            return Process::result();
+        });
         config(['services.printer.kitchen_queue' => 'kitchen-printer']);
         $menuItem = MenuItem::query()->create([
             'item_number' => '17a',
             'name' => 'Loempia met kip',
-            'cn_name' => '鸡卷',
+            'cn_name' => '鸡卷六七八九',
             'price' => '5.50',
         ]);
         $user = User::factory()->create();
@@ -73,12 +91,20 @@ class OrderPrintingTest extends TestCase
             ->postJson("/orders/{$order->id}/print", ['destination' => 'kitchen'])
             ->assertNoContent();
 
-        Process::assertRan(function (PendingProcess $process): bool {
-            return $process->command === ['lp', '-d', 'kitchen-printer', '-o', 'cpi=16', '-o', 'page-left=0', '-o', 'page-right=0']
-                && str_contains($process->input, 'KITCHEN ORDER')
-                && str_contains($process->input, '鸡卷')
-                && ! str_contains($process->input, 'Loempia met kip');
+        Process::assertRan(function (PendingProcess $process) use (&$printedFile): bool {
+            return is_string($printedFile)
+                && $process->command === ['lp', '-d', 'kitchen-printer', '-o', 'cpi=14', '-o', 'page-left=0', '-o', 'page-right=0', $printedFile];
         });
+        $this->assertIsString($printedFile);
+        $this->assertFileDoesNotExist($printedFile);
+        $this->assertIsString($printData);
+        $this->assertStringContainsString('KITCHEN ORDER', $printData);
+        $this->assertStringContainsString('鸡卷六七八', $printData);
+        $this->assertStringNotContainsString('九', $printData);
+        $this->assertStringNotContainsString('Loempia met kip', $printData);
+        foreach (explode("\n", $printData) as $printLine) {
+            $this->assertLessThanOrEqual(40, mb_strwidth($printLine, 'UTF-8'));
+        }
     }
 
     public function test_printing_requires_authentication_and_order_ownership(): void
