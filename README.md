@@ -56,6 +56,14 @@ composer setup
 
 The setup script installs Composer dependencies, creates `.env` if it does not exist, generates the application key, runs migrations, installs npm dependencies, and builds the frontend assets. SQLite is used by default. To use MySQL or PostgreSQL, create and configure `.env` before running setup so the migrations use the intended database.
 
+To populate the database with the starter user and menu items, run:
+
+```bash
+php artisan db:seed
+```
+
+This creates `test@example.com` with the password `password` and synchronizes menu items from `database/seeders/menu-items.json`, removing menu items that are not in that file. Do not use the default credentials in production or run this seeder against a production database.
+
 ## Printer Configuration
 
 Printing requires CUPS queues on the same host as the application. List available queues with:
