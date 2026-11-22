@@ -411,17 +411,15 @@
             :root { --header-height: 76px; }
             .main-header { right: 0; align-items: center; padding: 0 .75rem; z-index: 45; }
             .main-header > div { align-items: center !important; flex-wrap: nowrap; gap: .5rem; }
-            .header-nav { justify-content: flex-end; gap: .35rem; padding-right: 2.75rem; }
+            .header-nav { justify-content: flex-end; gap: .35rem; }
+            .header-action-button, .main-header .new-order-button { flex: 0 0 2.5rem; width: 2.5rem; height: 2.5rem; justify-content: center; padding: 0; }
             .sidebar { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: 100vw; margin: 0; border-left: 0; border-radius: 0; z-index: 60; }
             .main-content { margin-right: 0; padding-top: calc(var(--header-height) + 1.25rem); }
             .order-card { padding: 1.5rem; }
             .order-detail-header { align-items: stretch; flex-direction: column; gap: 1rem; }
             .order-total { align-items: flex-start; }
-            .order-item-detail { grid-template-columns: 7rem 3rem minmax(0, 1fr) auto 1.75rem; gap: .4rem; padding: .7rem; }
             .sidebar-close-toggle { top: 1rem; right: 1rem; }
-            .sidebar-collapsed .sidebar { display: none; }
-            .sidebar-collapsed .sidebar-close-toggle { display: none; }
-            .sidebar-open-toggle { top: 1rem; right: 1rem; z-index: 70; }
+            .sidebar-open-toggle { position: static; top: auto; right: auto; z-index: 70; flex: 0 0 auto; margin-left: .25rem; }
         }
 
         @media print {
@@ -446,12 +444,27 @@
 
         @media (max-width: 767px) {
             :root { --sidebar-width: 100vw; }
+            .sidebar-collapsed .sidebar,
+            .sidebar-collapsed .sidebar-close-toggle { display: none; }
             .main-header { padding-inline: .75rem; }
             .main-content { padding: calc(var(--header-height) + 1rem) .75rem 1rem; }
             .order-card { padding: 1.25rem; border-radius: 1rem; }
             .order-detail-header { gap: 1rem; margin-bottom: 1.25rem; padding-bottom: 1rem; }
             .order-total strong { font-size: 1.6rem; }
-            .order-item-detail { grid-template-columns: 6rem 2.5rem minmax(0, 1fr) auto 1.75rem; }
+            .order-item-detail-heading { display: none; }
+            .order-item-detail:not(.order-item-detail-heading) {
+                grid-template-columns: minmax(0, 1fr) auto auto auto;
+                grid-template-areas:
+                    "name name price delete"
+                    "quantity number price delete";
+                gap: .25rem .5rem;
+                padding: .65rem .75rem;
+            }
+            .item-quantity-cell { grid-area: quantity; }
+            .item-number-cell { grid-area: number; font-size: .8rem; }
+            .item-name-cell { grid-area: name; }
+            .item-price-cell { grid-area: price; }
+            .item-delete-button { grid-area: delete; }
             .item-number-modal-dialog { margin-top: 10vh; padding: 1.5rem; }
         }
 
@@ -548,7 +561,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const layout = document.body;
         const sidebarToggles = document.querySelectorAll('[data-sidebar-toggle]');
-        const sidebarMediaQuery = window.matchMedia('(max-width: 640px)');
+        const sidebarMediaQuery = window.matchMedia('(max-width: 767px)');
 
         const setSidebarState = (collapsed, persist = true) => {
             layout.classList.toggle('sidebar-collapsed', collapsed);
@@ -574,6 +587,11 @@
                 matches || window.localStorage.getItem('orders-sidebar-collapsed') === 'true',
                 false
             );
+        });
+        document.addEventListener('order:selected', () => {
+            if (sidebarMediaQuery.matches) {
+                setSidebarState(true);
+            }
         });
 
         sidebarToggles.forEach((toggle) => {

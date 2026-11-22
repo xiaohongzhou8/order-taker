@@ -10,19 +10,19 @@
                 <nav class="header-nav">
                     <button type="button" class="header-action-button" data-dashboard-action="print" aria-label="Print workspace">
                         <i class="fa-solid fa-print" aria-hidden="true"></i>
-                        Print
+                        <span class="header-action-label">Print</span>
                     </button>
                     <button type="button" class="header-action-button" data-dashboard-action="kitchen" aria-label="Print kitchen ticket">
                         <i class="fa-solid fa-utensils" aria-hidden="true"></i>
-                        Kitchen
+                        <span class="header-action-label">Kitchen</span>
                     </button>
-                    <a href="{{ route('orders.create') }}" class="new-order-button" data-dashboard-action="new-order">
-                        New order
+                    <a href="{{ route('orders.create') }}" class="new-order-button" data-dashboard-action="new-order" aria-label="New order">
+                        <span class="new-order-label">New order</span>
                         <i class="fa-solid fa-plus" aria-hidden="true"></i>
                     </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="header-signout">
+                        <button type="submit" class="header-signout" aria-label="Sign out">
                             <span>Sign out</span>
                             <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
                         </button>

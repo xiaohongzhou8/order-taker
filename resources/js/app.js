@@ -119,6 +119,7 @@ document.addEventListener('click', async (event) => {
             document.querySelectorAll('.order-item').forEach((item) => item.classList.remove('active'));
             orderItem.classList.add('active');
             window.history.pushState({}, '', `/orders/${orderItem.dataset.orderId}`);
+            document.dispatchEvent(new Event('order:selected'));
         }
 
         return;
